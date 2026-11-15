@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: REPLACE_WITH_ECR_URL:REPLACE_WITH_IMAGE_TAG
+          image: 057241186497.dkr.ecr.us-east-1.amazonaws.com/fbc-consent-api-dev:v1
           imagePullPolicy: Always
 
           ports:

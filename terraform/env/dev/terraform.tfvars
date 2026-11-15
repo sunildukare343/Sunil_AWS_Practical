@@ -18,7 +18,7 @@ kubernetes_version = "1.35" # EKS standard support until 27 Mar 2027
 
 # REPLACE with your public IP (curl -s https://checkip.amazonaws.com)/32
 # 152.57.252.89 is a documentation placeholder and will lock you out.
-cluster_public_access_cidrs = ["152.57.252.89/32"]
+cluster_public_access_cidrs = ["152.57.252.74/32"]
 
 cluster_security_group_keys = ["fbc-sg-eks-cluster-dev-use1"]
 
