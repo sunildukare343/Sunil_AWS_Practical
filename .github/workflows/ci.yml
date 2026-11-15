@@ -18,7 +18,7 @@ env:
   AWS_REGION: us-east-1
   AWS_ACCOUNT_ID: "057241186497"
   ECR_REPOSITORY: fbc-consent-api-dev
-
+ 
 jobs:
 
   # 1. Application Testing
