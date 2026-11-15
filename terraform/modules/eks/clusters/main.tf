@@ -118,18 +118,18 @@ resource "aws_cloudwatch_log_group" "cluster" {
     each.value.tags
   )
 
-  depends_on = [ aws_kms_key.cluster ]
+  depends_on = [aws_kms_key.cluster]
 }
 
 
 resource "aws_eks_cluster" "this" {
   for_each = var.eks_clusters
 
-  name     = each.key
-  role_arn = aws_iam_role.cluster[each.key].arn
-  version  = each.value.version
+  name                          = each.key
+  role_arn                      = aws_iam_role.cluster[each.key].arn
+  version                       = each.value.version
   bootstrap_self_managed_addons = each.value.bootstrap_self_managed_addons
-  enabled_cluster_log_types = each.value.cluster_log_types
+  enabled_cluster_log_types     = each.value.cluster_log_types
 
   access_config {
     authentication_mode                         = each.value.authentication_mode

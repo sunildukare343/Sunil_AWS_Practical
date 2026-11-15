@@ -19,6 +19,6 @@ variable "nat_gateways" {
 
     tags = optional(map(string), {})
   }))
-  description = "Configuration for NAT Gateways"  
+  description = "Configuration for NAT Gateways"
 }
   

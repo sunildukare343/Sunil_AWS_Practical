@@ -6,13 +6,13 @@ variable "addons" {
     addon_version = optional(string)
 
     # Key of an IRSA role in var.irsa_role_arns to use as the add-on's service account role
-    irsa_role_key = optional(string)
+    irsa_role_key               = optional(string)
     resolve_conflicts_on_create = optional(string, "OVERWRITE")
     resolve_conflicts_on_update = optional(string, "OVERWRITE")
-    preserve_on_delete = optional(bool, true)
+    preserve_on_delete          = optional(bool, true)
 
     pod_identity_associations = optional(list(object({
-      role_arn    = string
+      role_arn        = string
       service_account = string
     })), [])
 

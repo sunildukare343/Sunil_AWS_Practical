@@ -64,9 +64,9 @@ resource "aws_eks_node_group" "this" {
 
   subnet_ids = [
     for subnet_key in coalesce(
-      try(each.value.subnet_keys, null),                               
+      try(each.value.subnet_keys, null),
       try(var.eks_clusters[each.value.cluster_key].subnet_keys, null),
-      []                                                               
+      []
     ) : var.subnet_ids[subnet_key]
   ]
 
