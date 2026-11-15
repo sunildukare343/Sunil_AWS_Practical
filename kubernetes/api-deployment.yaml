@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: 057241186497.dkr.ecr.us-east-1.amazonaws.com/fbc-consent-api-dev:v1
+          image: 057241186497.dkr.ecr.us-east-1.amazonaws.com/fbc-consent-api-dev@sha256:210ccce907ed6c591274e60d4059c3dcc1150a929d93244626ad0a078b7da5f2
           imagePullPolicy: Always
 
           ports:
