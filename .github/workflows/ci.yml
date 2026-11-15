@@ -5,9 +5,17 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'app/**'
+      - '.github/workflows/**'
+
   pull_request:
     branches:
       - main
+    paths:
+      - 'app/**'
+      - '.github/workflows/**'
+      
   workflow_dispatch:
 
 permissions:
@@ -18,7 +26,7 @@ env:
   AWS_REGION: us-east-1
   AWS_ACCOUNT_ID: "057241186497"
   ECR_REPOSITORY: fbc-consent-api-dev
- 
+
 jobs:
 
   # 1. Application Testing
@@ -102,7 +110,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Kustomize
-      #  uses: imranismail/setup-kustomize@v2
         uses: fluxcd/pkg/actions/kustomize@main
 
       - name: Build Kubernetes Manifests
@@ -131,12 +138,14 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     permissions:
-      contents: read
+      contents: write
       id-token: write
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Build Docker Image
         run: |
@@ -177,12 +186,45 @@ jobs:
             --query 'imageDetails[0].imageDigest' \
             --output text)
 
+          if [[ ! "$DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]; then
+            echo "Invalid ECR image digest: $DIGEST"
+            exit 1
+          fi
+
           echo "IMAGE_DIGEST=$DIGEST" >> "$GITHUB_ENV"
 
           echo "Git Commit: $GITHUB_SHA"
           echo "Image: $ECR_URI"
           echo "Digest: $DIGEST"
 
+      # 5. Automatically Update Kubernetes Manifest
+      - name: Update Kubernetes Manifest
+        run: |
+          ECR_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}
+          IMAGE="${ECR_URI}@${IMAGE_DIGEST}"
+
+          sed -i -E "s|^([[:space:]]*image: ).*|\1${IMAGE}|" \
+            kubernetes/api-deployment.yaml
+
+          echo "Updated Kubernetes image:"
+          grep "image:" kubernetes/api-deployment.yaml
+
+      # 6. Commit and Push Manifest Update
+      - name: Commit and Push Manifest Update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add kubernetes/api-deployment.yaml
+
+          if git diff --cached --quiet; then
+            echo "No manifest changes to commit"
+          else
+            git commit -m "Update API image to ${GITHUB_SHA}"
+            git push origin HEAD:main
+          fi
+
+      # 7. Save Release Metadata
       - name: Save Release Metadata
         run: |
           mkdir -p release
@@ -196,10 +238,10 @@ jobs:
 
           cat release/release-metadata.txt
 
+      # 8. Upload Release Metadata
       - name: Upload Release Metadata
         uses: actions/upload-artifact@v4
         with:
           name: release-metadata
           path: release/release-metadata.txt
           retention-days: 30
- 
