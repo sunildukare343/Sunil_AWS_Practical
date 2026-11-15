@@ -5,3 +5,4 @@
 kubeconfig
 *.pem
 postgres-secret.yaml
+cosign.key

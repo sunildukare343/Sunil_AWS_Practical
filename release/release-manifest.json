@@ -1,0 +1,6 @@
+{
+  "image": "057241186497.dkr.ecr.us-east-1.amazonaws.com/fbc-consent-api-dev@sha256:210ccce907ed6c591274e60d4059c3dcc1150a929d93244626ad0a078b7da5f2",
+  "image_digest": "sha256:210ccce907ed6c591274e60d4059c3dcc1150a929d93244626ad0a078b7da5f2",
+  "source_commit": "a121a7360fc6d03213d3e2998375e6e851c9b6d5",
+  "sbom_sha256": "3ce9bc7d05786059181268aff0e9b537105bd056c9ce9d4712a7ad4d94b0609d"
+}
